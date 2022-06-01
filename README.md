@@ -4,7 +4,7 @@ https://isdoncherrydeadyet.ca
 
 ## Summary
 
-The question of the century, when will the racist spectre of saturday night Canadian Hockey commentating finally kick the bucket, so we can talk hockey, talk about some good guys, [talk about the troops](https://www.youtube.com/watch?v=3xva-cdBi8E).
+The question of the century, when will the racist spectre of saturday night Canadian Hockey commentating finally kick the bucket, so we can talk hockey, talk about some good guys, [and talk about the troops](https://www.youtube.com/watch?v=3xva-cdBi8E).
 
 This is a small daemon designed to use wikidata sparql queries to check if the bucket has been kicked over, and then send a request for a push notification to a local [gotify](https://gotify.net/) instance.
 
