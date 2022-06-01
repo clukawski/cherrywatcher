@@ -27,3 +27,7 @@ I chose this license because apparently it has some problems in some jurisdictio
 ![](./wtfpl-strip.jpg)
 
 Ubiquitous WTFPL comic is not my work and sourced from the wtfpl website
+
+## Disclaimer
+
+The contents of this repository are intended only as an informative resource.
