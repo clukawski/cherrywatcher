@@ -24,4 +24,6 @@ Usage of ./cherrywatcher:
 
 I chose this license because apparently it has some problems in some jurisdictions
 
+Ubiquitous WTFPL comic below is not my work and sourced from the wtfpl website
+
 ![](./wtfpl-strip.jpg)
