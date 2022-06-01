@@ -24,4 +24,4 @@ Usage of ./cherrywatcher:
 
 I chose this license because apparently it has some problems in some jurisdictions
 
-![](http://www.wtfpl.net/wp-content/uploads/2012/12/wtfpl-strip.jpg)
+![](./wtfpl-strip.jpg)
