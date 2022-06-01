@@ -17,3 +17,11 @@ Usage of ./cherrywatcher:
     	Token used for gotify server push POST request
   -t	Test service with a different, but dead Don Cherry
 ```
+
+## License
+
+**WTFPL**
+
+I chose this license because apparently it has some problems in some jurisdictions
+
+![](http://www.wtfpl.net/wp-content/uploads/2012/12/wtfpl-strip.jpg)
