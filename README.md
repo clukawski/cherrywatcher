@@ -30,4 +30,4 @@ Ubiquitous WTFPL comic is not my work and sourced from the wtfpl website
 
 ## Disclaimer
 
-The contents of this repository are intended only as an informative resource tool.
+The contents of this repository are intended only as an information resource tool.
