@@ -145,7 +145,7 @@ func pushCherryRIP(c *http.Client) error {
 	formValues := map[string]io.Reader{
 		`title`:    strings.NewReader(`🏒 🥳 🎉 DON CHERRY IS DEAD NOW!! REJOICE!! 🎉 🥳 🏒`),
 		`message`:  strings.NewReader(`🎉 🥳 🏒 DON CHERRY'S DEAD LETS NOT TALK ABOUT ANY GOOD GUYS!!! 🏒 🥳 🎉`),
-		`priority`: strings.NewReader(`1`),
+		`priority`: strings.NewReader(`10`),
 	}
 
 	// Prepare a multipart form for Gotify
