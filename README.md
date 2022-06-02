@@ -18,6 +18,12 @@ Usage of ./cherrywatcher:
   -t	Test service with a different, but dead Don Cherry
 ```
 
+## Sample Integration
+
+[Gotify Android](https://github.com/gotify/android)
+
+![](./sample.png)
+
 ## License
 
 **WTFPL**
