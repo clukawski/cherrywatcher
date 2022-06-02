@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"flag"
+	"fmt"
 	"io"
 	"log"
 	"net/http"
@@ -38,19 +39,27 @@ type CherryRIPData struct {
 	} `json:"results"`
 }
 
+// Flags
+var (
+	test        bool
+	pushToken   string
+	queryString string
+	pushURL     string
+)
+
 func main() {
-	// Flags
-	var (
-		test        bool
-		pushToken   string
-		queryString string
-	)
 	flag.BoolVar(&test, "t", false, "Test service with a different, but dead Don Cherry")
 	flag.StringVar(&pushToken, "p", "", "Token used for gotify server push POST request")
+	flag.StringVar(&pushURL, "u", "", "URL for gotify server")
 	flag.Parse()
 
 	// Don't run without the pushToken
 	if pushToken == "" {
+		log.Fatalln("missing push token for gotify")
+	}
+
+	// Don't run without the pushURL
+	if pushURL == "" {
 		log.Fatalln("missing push token for gotify")
 	}
 
@@ -87,7 +96,7 @@ func main() {
 		if dead, err := checkCherryRIP(c, req); err != nil {
 			log.Println("client: %s", err)
 		} else if dead {
-			if err = pushCherryRIP(c, pushToken); err != nil {
+			if err = pushCherryRIP(c); err != nil {
 				log.Printf("unable to send push request about don cherry being dead, dang: %s", err)
 			} else if count > 5 {
 				// We have nothing left to do
@@ -128,8 +137,8 @@ func checkCherryRIP(c *http.Client, req *http.Request) (dead bool, err error) {
 
 // pushCherryRIP sends a POST request to local Gotify server to send a push
 // notification to registered devices when Don Cherry is dead
-func pushCherryRIP(c *http.Client, token string) error {
-	rawUrl := "https://push.example.de/message?token=" + token
+func pushCherryRIP(c *http.Client) error {
+	rawUrl := fmt.Sprintf("https://%s/message?token=%s", pushURL, pushToken)
 	// -F "title=my title" -F "message=my message" -F "priority=5"
 	q, err := url.Parse(rawUrl)
 	if err != nil {
