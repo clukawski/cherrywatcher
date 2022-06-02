@@ -1,14 +1,17 @@
 package main
 
 import (
+	"bytes"
 	"encoding/json"
 	"flag"
 	"fmt"
 	"io"
 	"log"
+	"mime/multipart"
 	"net/http"
 	"net/url"
 	"os"
+	"strings"
 	"time"
 )
 
@@ -138,29 +141,61 @@ func checkCherryRIP(c *http.Client, req *http.Request) (dead bool, err error) {
 // pushCherryRIP sends a POST request to local Gotify server to send a push
 // notification to registered devices when Don Cherry is dead
 func pushCherryRIP(c *http.Client) error {
-	rawUrl := fmt.Sprintf("https://%s/message?token=%s", pushURL, pushToken)
 	// -F "title=my title" -F "message=my message" -F "priority=5"
-	q, err := url.Parse(rawUrl)
+	formValues := map[string]io.Reader{
+		`title`:    strings.NewReader(`🏒 🥳 🎉 DON CHERRY IS DEAD NOW!! REJOICE!! 🎉 🥳 🏒`),
+		`message`:  strings.NewReader(`🎉 🥳 🏒 DON CHERRY'S DEAD LETS NOT TALK ABOUT ANY GOOD GUYS!!! 🏒 🥳 🎉`),
+		`priority`: strings.NewReader(`1`),
+	}
+
+	// Prepare a multipart form for Gotify
+	var b bytes.Buffer
+	w := multipart.NewWriter(&b)
+	for key, r := range formValues {
+		var fw io.Writer
+		if x, ok := r.(io.Closer); ok {
+			defer x.Close()
+		}
+		// Add file
+		var err error
+		if x, ok := r.(*os.File); ok {
+			if fw, err = w.CreateFormFile(key, x.Name()); err != nil {
+				return err
+			}
+		} else {
+			// Add other fields
+			if fw, err = w.CreateFormField(key); err != nil {
+				return err
+			}
+		}
+		if _, err = io.Copy(fw, r); err != nil {
+			return err
+		}
+
+	}
+	w.Close()
+
+	// Craft our request including our multipart io.Writer
+	url := fmt.Sprintf("https://%s/message?token=%s", pushURL, pushToken)
+	req, err := http.NewRequest("POST", url, &b)
 	if err != nil {
 		return err
 	}
-
-	// Include this header or you'll get XML back!
-	// -H 'Accept: application/sparql-results+json'
-	req := &http.Request{
-		Method: "POST",
-		URL:    q,
-		PostForm: url.Values{
-			`title`:    []string{`🏒 🥳 🎉 DON CHERRY IS DEAD NOW!! REJOICE!! 🎉 🥳 🏒`},
-			`message`:  []string{`🎉 🥳 🏒 DON CHERRY'S DEAD LETS NOT TALK ABOUT ANY GOOD GUYS!!! 🏒 🥳 🎉`},
-			`priority`: []string{`1`},
-		},
-	}
+	// Set Form Data Content-Type header
+	req.Header.Set("Content-Type", w.FormDataContentType())
 
 	// Make the request to Gotify
-	_, err = c.Do(req)
+	res, err := c.Do(req)
 	if err != nil {
 		return err
 	}
+
+	// Check the response
+	body, err := io.ReadAll(res.Body)
+	if err != nil {
+		return err
+	}
+
+	log.Printf("gotify response body: %s", string(body))
 	return nil
 }
